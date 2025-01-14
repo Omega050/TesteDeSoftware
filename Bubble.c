@@ -3,20 +3,21 @@ else fprintf(path," %2d\n",num);
 #include <stdio.h>
 #define N 100
 
+FILE *path;
+static int printed_nodes = 0;
+
 void troca(int *a, int *b) {
     int aux;
     ponta_de_prova(8); // Ponto de prova para a troca
     aux = *a;
-    ponta_de_prova(8);
     *a = *b;
-    ponta_de_prova(8);
     *b = aux;
 }
 
 // v : vetor; n : tamanho do vetor
 void bubbleSort(int *v, int n) {
     int i, fim, k;
-    ponta_de_prova(4); // Ponto de prova ao entrar na função
+    ponta_de_prova(5); // Ponto de prova ao entrar na função
 
     for (fim = (n-1); (fim > 0); --fim) {
         ponta_de_prova(5); // Ponto de prova antes do laço externo
@@ -38,20 +39,32 @@ void bubbleSort(int *v, int n) {
 }
 
 int main() {
-    FILE *path = fopen("path.tes", "w");
-    static int printed_nodes = 0;
+    path = fopen("path.tes", "w");
+    if (path == NULL) {
+        printf("Erro ao abrir o arquivo de saída.\n");
+        return 1;
+    }
 
     int n, i, Vetor[N];
     ponta_de_prova(1); // Ponto de prova ao início da execução
 
-    printf("Entre com o valor do n tamanho do vetor\n");
-    scanf("%d", &n);
-    ponta_de_prova(2); // Após entrada de `n`
+    printf("Entre com o valor do n (tamanho do vetor, máximo %d):\n", N);
+    if (scanf("%d", &n) != 1 || n <= 0 || n > N) {
+        ponta_de_prova(2)
+        printf("Valor inválido para n.\n");
+        fclose(path);
+        return 1;
+    }
+    ponta_de_prova(3); // Após entrada de `n`
 
-    printf("Entre com os valores do vetor a ser ordenado\n");
+    printf("Entre com os valores do vetor a ser ordenado:\n");
     for (i = 0; i < n; i++) {
-        ponta_de_prova(3); // Ponto de prova durante a leitura do vetor
-        scanf("%d", &Vetor[i]);
+        ponta_de_prova(4); // Ponto de prova durante a leitura do vetor
+        if (scanf("%d", &Vetor[i]) != 1) {
+            printf("Entrada inválida para o vetor.\n");
+            fclose(path);
+            return 1;
+        }
     }
 
     ponta_de_prova(4); // Antes de chamar o bubbleSort
@@ -63,8 +76,9 @@ int main() {
         ponta_de_prova(13); // Ponto de prova durante a impressão do vetor ordenado
         printf("%d ", Vetor[i]);
     }
-    ponta_de_prova(15); // Após a última impressão
+    ponta_de_prova(14); // Após a última impressão
     printf("%d\n", Vetor[i]);
 
+    fclose(path);
     return 0;
 }
